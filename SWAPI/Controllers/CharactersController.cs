@@ -9,8 +9,8 @@ namespace SWAPI.Controllers
     [ApiController]
     public class CharactersController : ControllerBase
     {
-        private readonly IStarWarsMovie _starwarmovie;
-        public CharactersController(IStarWarsMovie starwarmovie)
+        private readonly IStarWarsMovieService _starwarmovie;
+        public CharactersController(IStarWarsMovieService starwarmovie)
         {
             _starwarmovie = starwarmovie;
         }

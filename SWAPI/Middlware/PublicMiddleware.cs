@@ -20,7 +20,7 @@ namespace SWAPI.Middlware
             }
             bool isValidGuid = IsGuid(customHeader);
             var url = context.Request.GetDisplayUrl();
-            if (customHeader == string.Empty && !isValidGuid)
+            if (!isValidGuid)
             {
                 context.Response.StatusCode = 401;
                 await context.Response.WriteAsync("Api Key was not provided ");
