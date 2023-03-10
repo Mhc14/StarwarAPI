@@ -1,5 +1,9 @@
+
+using Microsoft.Extensions.Configuration;
 using Moq;
+using ServiceStack.Text;
 using SWAPI.Services;
+
 
 namespace SWProject1
 {
@@ -22,15 +26,20 @@ namespace SWProject1
         {
 
             // ARRANGE
+            Mock<IConfigurationSection> mockSection = new Mock<IConfigurationSection>();
+            mockSection.Setup(x => x.Value).Returns("http://swapi.dev/api/");
+
+            Mock<IConfiguration> mockConfig = new Mock<IConfiguration>();
+            mockConfig.Setup(x => x.GetSection(It.Is<string>(k => k == "SWAPIBaseUrl"))).Returns(mockSection.Object);
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             var httClientMock = new Mock<HttpClient>();
-            httClientMock.Object.BaseAddress = new Uri("http://swapi.dev/api/people/?page" + "=" + 1);
-            httpClientFactoryMock.Setup(_ => _.CreateClient("http://swapi.dev/api/people/?page" + "=" + 1)).Returns(httClientMock.Object);
-            var starwarmovie = new StarWarsMovie(httpClientFactoryMock.Object);
+            httClientMock.Object.BaseAddress = new Uri("http://swapi.dev/api/");
+            httpClientFactoryMock.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httClientMock.Object);
+            var starwarmovie = new StarWarsMovieService(httpClientFactoryMock.Object, mockConfig.Object);
             var result = await starwarmovie.GetPublicStarWarsMovie(1);
 
-            // Assert
-            Assert.NotNull(result);
+            //Assert
+             Assert.NotNull(result);
         }
 
 
@@ -38,15 +47,21 @@ namespace SWProject1
         public async Task StarwarMovie_returns_protected_specified_character()
         {
 
+
             // ARRANGE
+            Mock<IConfigurationSection> mockSection = new Mock<IConfigurationSection>();
+            mockSection.Setup(x => x.Value).Returns("http://swapi.dev/api/");
+
+            Mock<IConfiguration> mockConfig = new Mock<IConfiguration>();
+            mockConfig.Setup(x => x.GetSection(It.Is<string>(k => k == "SWAPIBaseUrl"))).Returns(mockSection.Object);
             var httpClientFactoryMock = new Mock<IHttpClientFactory>();
             var httClientMock = new Mock<HttpClient>();
-            httClientMock.Object.BaseAddress = new Uri("http://swapi.dev/api/people/?page" + "=" + 1);
-            httpClientFactoryMock.Setup(_ => _.CreateClient("http://swapi.dev/api/people/?page" + "=" + 1)).Returns(httClientMock.Object);
-            var starwarmovie = new StarWarsMovie(httpClientFactoryMock.Object);
+            httClientMock.Object.BaseAddress = new Uri("http://swapi.dev/api/");
+            httpClientFactoryMock.Setup(_ => _.CreateClient(It.IsAny<string>())).Returns(httClientMock.Object);
+            var starwarmovie = new StarWarsMovieService(httpClientFactoryMock.Object, mockConfig.Object);
             var result = await starwarmovie.GetProtectedStarWarsMovie(1);
 
-            // Assert
+            //Assert
             Assert.NotNull(result);
         }
     }
